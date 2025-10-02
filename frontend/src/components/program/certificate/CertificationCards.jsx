@@ -1,0 +1,255 @@
+import React, { useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import { FaCheckCircle } from "react-icons/fa";
+import {
+  Card,
+  CardContent,
+  CardDescription
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+
+// Domain Components
+import PythonInfo from "../domains/PythonInfo";
+import IOTInfo from "../domains/IOTInfo";
+import AutomationInfo from "../domains/AutomationInfo";
+import CloudOperationsInfo from "../domains/CloudOperationsInfo";
+import DevOpsInfo from "../domains/DevOpsInfo";
+import VLSIInfo from "../domains/VLSIInfo";
+import JavaInfo from "../domains/JavaInfo";
+import MSInfo from "../domains/MSInfo";
+import CyberSecurityInfo from "../domains/CyberSecurityInfo";
+
+// Images
+import aboutImage from "../../../assets/Intern/image.jpg";
+import pythonImage from "../../../assets/Intern/ai-ml.jpg";
+import javaImage from "../../../assets/Intern/java.jpg";
+import mernImage from "../../../assets/Intern/MS.png";
+import iotImage from "../../../assets/Intern/iot.jpg";
+import arImage from "../../../assets/Intern/AR.jpg";
+import vlsiImage from "../../../assets/Intern/VLSI.jpg";
+import devopsImage from "../../../assets/Intern/DO1.jpg";
+import cloudImage from "../../../assets/Intern/CLOUD1.jpg";
+import cyberImage from "../../../assets/Intern/Cyber.jpeg";
+
+const CertificationCards = () => {
+  const cardsRef = useRef(null);
+  const [popupCert, setPopupCert] = useState(null);
+  const navigate = useNavigate();
+
+  const domains = [
+    {
+      program_id: "CERT01",
+      title: "Python Full Stack Development",
+      description:
+        "Unlock the power of Python and build dynamic web applications from front to back. Our Python Full Stack Development certification program offers a journey into modern web technologies, equipping you with the skills to design, develop, and deploy solutions. Dive deep into frameworks like Django and Flask, master essential frontend technologies, and emerge as a proficient full-stack developer ready for the industry.",
+      image: pythonImage,
+    },
+    {
+      program_id: "CERT02",
+      title: "Java Full Stack Development",
+      description:
+        "Master the enterprise-grade power of Java and become a versatile full-stack developer. Our Java Full Stack Development certification program offers an intensive curriculum covering everything from robust backend frameworks like Spring Boot to modern frontend technologies. Build scalable, secure, and high-performance applications, gaining the expertise sought after by leading tech companies.",
+      image: javaImage,
+    },
+    {
+      program_id: "CERT03",
+      title: "MERN Stack Development",
+      description:
+        "Dive into the world of modern web development with our MERN Stack certification program! Learn to build powerful, single-page applications using MongoDB, Express.js, React.js, and Node.js – the technologies driving today's most innovative web experiences. Gain hands-on expertise in building responsive UIs, robust APIs, and scalable databases, preparing you for a thriving career in web development.",
+      image: mernImage,
+    },
+    {
+      program_id: "CERT04",
+      title: "Internet of Things (IoT)",
+      description:
+        "Step into the future with our Internet of Things certification program! Explore the fascinating world where physical objects connect with the industries. Learn to design, develop, and deploy smart solutions using popular IoT platforms, sensors, and microcontrollers. Gain practical skills in hardware-software integration, data collection, and cloud connectivity, positioning yourself at the forefront of the IoT revolution.",
+      image: iotImage,
+    },
+    {
+      program_id: "CERT05",
+      title: "Automation & Robotics",
+      description:
+        "Revolutionize industries with our Automation & Robotics certification program! Explore the exciting intersection of mechanical engineering, electronics, and computer science. Learn to design, program, and control robotic systems and automated processes, gaining skills in industrial automation, intelligent systems, and robotics. Be part of shaping the future of smart manufacturing and beyond.",
+      image: arImage,
+    },
+    {
+      program_id: "CERT06",
+      title: "VLSI",
+      description:
+        "Design the chips of tomorrow with our VLSI certification program! Delve into the intricate world of Very Large Scale Integration, where you'll learn the complete lifecycle of integrated circuit design – from specification to fabrication. Gain expertise in RTL design, verification, synthesis, and physical design, acquiring the specialized skills crucial for a career in semiconductor innovation.",
+      image: vlsiImage,
+    },
+    {
+      program_id: "CERT07",
+      title: "DevOps",
+      description:
+        "Bridge the gap between development and operations with our immersive DevOps certification program! Learn the principles and practices that accelerate software delivery, improve system reliability, and foster collaboration. Master essential tools for automation, continuous integration/delivery, containerization, and infrastructure as code, becoming a crucial asset in any modern software team.",
+      image: devopsImage,
+    },
+    {
+      program_id: "CERT08",
+      title: "Cloud Operations",
+      description:
+        "Become a cloud expert with our Cloud Operations certification program! Learn to manage, monitor, and optimize scalable infrastructure on leading cloud platforms like AWS, Azure, or GCP. Gain practical skills in cloud resource provisioning, network configuration, security, and cost management, becoming essential for organizations embracing the power of the cloud.",
+      image: cloudImage,
+    },
+    {
+      program_id: "CERT09",
+      title: "Cyber Security",
+      description:
+        "Become a digital guardian with our Cyber Security certification program! Learn to defend against evolving cyber threats, protect critical data, and ensure system integrity. Gain hands-on experience in ethical hacking, vulnerability assessment, network security, and incident response, equipping you with the vital skills to safeguard the digital world.",
+      image: cyberImage,
+    },
+  ];
+
+  const handleLearnMoreClick = () =>
+    cardsRef.current?.scrollIntoView({ behavior: "smooth" });
+
+ const handleApplyClick = (cert) =>
+  navigate("/program/certificateregister", {    
+    state: { 
+      programId: cert.program_id, 
+      selectedDomain: cert.title 
+    } 
+  });
+
+
+
+const renderPopupComponent = () => {
+  const components = {
+    "Python Full Stack Development": PythonInfo,
+    "Java Full Stack Development": JavaInfo,
+    "MERN Stack Development": MSInfo,
+    "Internet of Things (IoT)": IOTInfo,
+    "Automation & Robotics": AutomationInfo,
+    "VLSI": VLSIInfo,
+    "DevOps": DevOpsInfo,
+    "Cloud Operations": CloudOperationsInfo,
+    "Cyber Security": CyberSecurityInfo
+  };
+
+  const Component = components[popupCert];
+  return Component ? <Component handleClose={() => setPopupCert(null)} /> : null;
+};
+
+
+  return (
+    <div>
+      {/* Hero Section */}
+      <div className="relative flex flex-col md:flex-row items-center justify-between px-20 py-16">
+        <div className="w-full md:w-1/2 flex flex-col gap-6">
+          <h1 className="text-3xl md:text-5xl text-center md:text-center text-white">
+            Boost Your Career with Professional Certifications
+          </h1>
+          <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+            {[
+              { title: "Expert Mentorship", desc: "Learn from industry professionals." },
+              { title: "Global Recognition", desc: "Get certified with globally recognized bodies." },
+              { title: "Career Growth", desc: "Boost job opportunities with certifications." },
+              { title: "Flexible Learning", desc: "Choose online or offline learning modes." },
+            ].map((item, index) => (
+              <li
+                key={index}
+                className="flex gap-3 items-start transform hover:translate-x-2 transition duration-300"
+              >
+                <FaCheckCircle
+                  className="text-orange-400 text-lg mt-1"
+                  size={24}
+                />
+                <div>
+                  <strong className="block text-lg">{item.title}</strong>
+                  <p className="text-sm">{item.desc}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+          <div className="flex justify-center md:justify-start mt-6">
+            <Button
+              className="hover:scale-105 transition-transform"
+              onClick={handleLearnMoreClick}
+            >
+              LEARN MORE
+            </Button>
+          </div>
+        </div>
+        <div className="w-full md:w-1/2 mt-8 md:mt-0">
+          <img
+            src={aboutImage}
+            alt="About Certifications"
+            className="rounded-3xl shadow-2xl hover:scale-105 transition-transform filter brightness-90"
+          />
+        </div>
+      </div>
+
+      {/* Cards Section */}
+      <h2
+        className="text-3xl font-bold text-center mt-12 mb-8 text-white"
+        ref={cardsRef}
+      >
+        Get Certified – Build Your Future
+      </h2>
+
+      <div className="grid gap-x-20 gap-y-78 md:grid-cols-2 lg:grid-cols-3 px-6 md:px-16 py-10">
+        {domains.map((cert, index) => (
+          <div
+            key={index}
+            className="relative bg-white shadow-lg overflow-visible transform hover:-translate-y-4 hover:shadow-2xl transition-all duration-500 mb-72"
+          >
+            {/* Image + Title */}
+            <div className="relative h-54 w-full">
+              <img
+                src={cert.image}
+                alt={cert.title}
+                className="w-full h-full object-cover filter brightness-90"
+              />
+              <p className="absolute top-3 left-3 bg-red-700 px-5 py-1 rounded text-white font-bold text-xs uppercase shadow-lg">
+                {cert.title}
+              </p>
+            </div>
+
+            {/* Floating Description Card */}
+            <div className="absolute top-[75%] left-1/2 -translate-x-1/2 w-[360px] bg-white p-5 border border-gray-200 shadow-xl rounded-2xl">
+              <div className="h-112 flex items-start overflow-hidden">
+                <p className="text-sm text-justify mb-3 !text-black">
+                  {cert.description}
+                </p>
+              </div>
+
+              {/* Buttons */}
+              <div className="flex justify-between gap-3">
+                <Button
+                  variant="secondary"
+                  className="px-3 py-2 shadow-md hover:bg-gray-500 text-sm"
+                  onClick={() => setPopupCert(cert.title)}
+                >
+                  View More
+                </Button>
+
+                  <Button
+  className="bg-orange-500 text-white px-3 py-2 shadow-lg hover:bg-orange-600 transition transform hover:scale-105 text-sm"
+  onClick={() => handleApplyClick(cert)}
+>
+  Apply
+</Button>
+
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Popup */}
+      <Dialog
+        open={!!popupCert}
+        onOpenChange={(open) => !open && setPopupCert(null)}
+      >
+        <DialogContent className="!w-[70rem] !max-w-[1400px] rounded-2xl shadow-2xl bg-white p-6 h-[90vh] overflow-y-auto">
+          {renderPopupComponent()}
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+};
+
+export default CertificationCards;

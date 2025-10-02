@@ -6,6 +6,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { motion } from "framer-motion";
 import { formVariants } from "../../../animations/formVariants";
+import { API_BASE, apiFetch } from "../../../lib/api";
 
 import {
   Pencil,
@@ -35,10 +36,16 @@ import {
 } from "@/components/ui/select";
 
 
-const API_BASE =
-  (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_API_BASE) ||
-  (typeof process !== 'undefined' && process.env && process.env.REACT_APP_API_BASE) ||
-  'http://localhost:5000/api';
+// Example axios call
+axios.get(`${API_BASE}/bootcamp`)
+  .then(res => console.log(res.data))
+  .catch(err => console.error(err));
+
+// Or using your helper
+apiFetch('/bootcamp', { method: 'GET' })
+  .then(res => console.log(res.data))
+  .catch(err => console.error(err));
+
 
 const CertificateRegistration = () => {
   // ✅ Inserted block here (before return)

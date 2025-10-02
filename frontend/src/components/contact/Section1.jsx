@@ -22,9 +22,10 @@ const Section1 = ({ disableWave, nameInputRef, hideImage }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:5000/api/contact-us/send-email", formData, {
-        headers: { "Content-Type": "application/json" },
-      });
+      await axios.post(`${API_BASE}/contact-us/send-email`, formData, {
+  headers: { "Content-Type": "application/json" },
+});
+
       toast.success("Message sent!", { autoClose: 6000 });
       setFormData({ name: "", phone: "", email: "", purpose: "" });
       setButtonClicked(true);

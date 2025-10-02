@@ -37,15 +37,7 @@ import {
 } from "@/components/ui/select";
 
 
-// Example axios call
-axios.get(`${API_BASE}/bootcamp`)
-  .then(res => console.log(res.data))
-  .catch(err => console.error(err));
 
-// Or using your helper
-apiFetch('/bootcamp', { method: 'GET' })
-  .then(res => console.log(res.data))
-  .catch(err => console.error(err));
 
 // const API_BASE =
 //   (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_API_BASE) ||
@@ -82,6 +74,18 @@ const InternshipRegistration = () => {
     coupon_code: '',
     transaction_id: '',
   });
+
+useEffect(() => {
+  axios.get(`${API_BASE}/api/programs`)
+    .then(res => setPrograms(res.data))
+    .catch(err => console.error(err)); // optional to keep error logging
+
+  apiFetch('/api/programs?category=internship', { method: 'GET' })
+    .then(res => setBootcampPrograms(res.data))
+    .catch(err => console.error(err)); // optional
+}, []);
+
+
 
   useEffect(() => {
     if (programId) setFormData(d => ({ ...d, program_id: programId }));

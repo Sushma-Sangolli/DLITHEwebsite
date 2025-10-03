@@ -5,7 +5,7 @@ import Section2 from "../landing/Section2";
 import Section3 from "../landing/Section3";
 import Section4 from "../landing/Section4";
 import Section5 from "../landing/Section5";
-import AboutSection2 from "../About/Section2";
+import AboutSection2 from "../about/Section2";
 import Footer from "../landing/Footer";
 
 function Landing() {

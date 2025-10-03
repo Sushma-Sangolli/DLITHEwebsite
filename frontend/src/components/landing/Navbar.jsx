@@ -1,8 +1,8 @@
-import React from "react"
-import { Link, useLocation } from "react-router-dom"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { Menu } from "lucide-react"
-import logo from "../../assets/landing_page/logo.png"
+import React from "react";
+import { Link, useLocation } from "react-router-dom";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Menu } from "lucide-react";
+import logo from "../../assets/landing_page/logo.png";
 
 const navigationItems = [
   { name: "Home", href: "/" },
@@ -11,20 +11,20 @@ const navigationItems = [
   { name: "Programs", href: "/program" },
   { name: "Contact", href: "/contact" },
   { name: "Gallery", href: "/gallary" },
-]
+];
 
 export default function Navbar() {
-  const location = useLocation()
+  const location = useLocation();
 
   return (
-    <nav className="fixed top-0 w-full bg-black shadow-sm shadow-yellow-400 z-50 h-16 flex items-center">
-      <div className="container mx-auto flex justify-between items-center px-4">
+    <nav className="fixed top-0 left-0 right-0 w-full bg-black shadow-sm shadow-yellow-400 z-50 h-16 overflow-hidden">
+      <div className="max-w-[1280px] mx-auto flex justify-between items-center px-4">
         {/* Logo */}
-        <Link to="/" className="flex items-center">
+        <Link to="/" className="flex items-center flex-shrink-0">
           <img
             src={logo}
             alt="Company Logo"
-            className="h-15 w-auto object-contain hover:scale-105 transition-transform duration-300"
+            className="h-14 w-auto object-contain hover:scale-105 transition-transform duration-300"
           />
         </Link>
 
@@ -67,7 +67,7 @@ export default function Navbar() {
                     to={item.href}
                     className={`text-lg font-medium transition-colors hover:text-yellow-400 ${
                       location.pathname === item.href
-                        ? "text-orange"
+                        ? "text-yellow-400"
                         : "text-white"
                     }`}
                   >
@@ -80,5 +80,5 @@ export default function Navbar() {
         </div>
       </div>
     </nav>
-  )
+  );
 }

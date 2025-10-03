@@ -54,6 +54,10 @@ const InternshipRegistration = () => {
   const [loading, setLoading] = useState(false);
   const [couponApplying, setCouponApplying] = useState(false);
 
+  // ✅ Add missing states
+  const [programs, setPrograms] = useState([]);
+  const [internshipPrograms, setInternshipPrograms] = useState([]);
+
   const [formData, setFormData] = useState({
     prefix: '',
     full_name: '',
@@ -75,22 +79,22 @@ const InternshipRegistration = () => {
     transaction_id: '',
   });
 
-useEffect(() => {
-  axios.get(`${API_BASE}/api/programs`)
-    .then(res => setPrograms(res.data))
-    .catch(err => console.error(err)); // optional to keep error logging
+  // ✅ Fetch programs when component mounts
+  useEffect(() => {
+    axios.get(`${API_BASE}/api/programs`)
+      .then(res => setPrograms(res.data))
+      .catch(err => console.error(err));
 
-  apiFetch('/api/programs?category=internship', { method: 'GET' })
-    .then(res => setBootcampPrograms(res.data))
-    .catch(err => console.error(err)); // optional
-}, []);
-
-
+    apiFetch('/api/programs?category=internship', { method: 'GET' })
+      .then(res => setInternshipPrograms(res.data))
+      .catch(err => console.error(err));
+  }, []);
 
   useEffect(() => {
     if (programId) setFormData(d => ({ ...d, program_id: programId }));
     if (selectedDomain) setFormData(d => ({ ...d, program_name: selectedDomain }));
   }, [programId, selectedDomain]);
+
 
   // Map UI names to internal state and backend names
   const handleChange = (e) => {
@@ -150,7 +154,7 @@ useEffect(() => {
 
     try {
       setCouponApplying(true);
-      const res = await axios.get(`${API_BASE}/coupons/validate/${encodeURIComponent(coupon)}/${encodeURIComponent(formData.program_id)}`);
+      const res = await axios.get(`${API_BASE}/api/coupons/validate/${encodeURIComponent(coupon)}/${encodeURIComponent(formData.program_id)}`);
       if (res.data && res.data.valid) {
         const discountedPrice = res.data.Discount_price ?? null;
         if (discountedPrice != null) {
@@ -191,7 +195,7 @@ useEffect(() => {
 
     // 1️⃣ Call backend to create Razorpay order
     const createOrderRes = await axios.post(
-      `${API_BASE}/transactions/payment/create-order`,
+      `${API_BASE}/api/transactions/payment/create-order`,
       {
         program_Id: formData.program_id,
         coupon_id: formData.coupon_code || null,
@@ -255,7 +259,7 @@ useEffect(() => {
           };
 
           const verifyRes = await axios.post(
-            `${API_BASE}/transactions/payment/verify-payment`,
+            `${API_BASE}/api/transactions/payment/verify-payment`,
             payload
           );
 
@@ -445,36 +449,41 @@ return (
     <User size={18} className="text-red-600" /> Prefix
   </Label>
 
-  <Select onValueChange={(val) => setFormData({ ...formData, prefix: val })}>
-    <SelectTrigger
-      className="w-full  truncate bg-gray-600 !text-black border border-gray-300 rounded-lg shadow-sm 
-                 focus:ring-2 focus:ring-gray-400 focus:border-gray-400 
-                 data-[state=open]:!bg-gray-200 data-[placeholder]:!text-black !bg-gray-100"
-    >
-      <SelectValue placeholder="Select prefix" className="!text-black" />
-    </SelectTrigger>
+ <Select onValueChange={(val) => setFormData({ ...formData, prefix: val })}>
+  <SelectTrigger
+    className="w-full max-w-[200px] truncate min-w-0 
+               bg-gray-600 !text-black border border-gray-300 rounded-lg shadow-sm 
+               focus:ring-2 focus:ring-gray-400 focus:border-gray-400 
+               data-[state=open]:!bg-gray-200 data-[placeholder]:!text-black !bg-gray-100"
+  >
+    <SelectValue 
+      placeholder="Select prefix" 
+      className="truncate text-ellipsis overflow-hidden !text-black"
+    />
+  </SelectTrigger>
 
-    <SelectContent className="bg-white !text-black">
-      <SelectItem 
-        value="Mr" 
-        className="!text-black hover:bg-gray-100 focus:bg-gray-200 data-[state=checked]:!text-black"
-      >
-        Mr
-      </SelectItem>
-      <SelectItem 
-        value="Ms" 
-        className="!text-black hover:bg-gray-100 focus:bg-gray-200 data-[state=checked]:!text-black"
-      >
-        Ms
-      </SelectItem>
-      <SelectItem 
-        value="Dr" 
-        className="!text-black hover:bg-gray-100 focus:bg-gray-200 data-[state=checked]:!text-black"
-      >
-        Dr
-      </SelectItem>
-    </SelectContent>
-  </Select>
+  <SelectContent className="bg-white !text-black max-w-[200px]">
+    <SelectItem 
+      value="Mr" 
+      className="truncate !text-black hover:bg-gray-100 focus:bg-gray-200 data-[state=checked]:!text-black"
+    >
+      Mr
+    </SelectItem>
+    <SelectItem 
+      value="Ms" 
+      className="truncate !text-black hover:bg-gray-100 focus:bg-gray-200 data-[state=checked]:!text-black"
+    >
+      Ms
+    </SelectItem>
+    <SelectItem 
+      value="Dr" 
+      className="truncate !text-black hover:bg-gray-100 focus:bg-gray-200 data-[state=checked]:!text-black"
+    >
+      Dr
+    </SelectItem>
+  </SelectContent>
+</Select>
+
 </motion.div>
 
 
@@ -495,35 +504,42 @@ return (
       />
     </motion.div>
 
-    {/* Contact */}
-    <motion.div variants={formVariants} whileHover={{ scale: 1.01 }}>
-      <Label className="flex items-center gap-2 font-medium text-gray-700">
-        <Phone size={18} className="text-red-600 fill-red-700" /> Contact Number
-      </Label>
-      <Input
-        type="tel"
-        name="contact"
-        value={formData.contact}
-        onChange={handleChange}
-        required
-        className="w-full truncate bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:border-red-600 focus:ring-1"
-      />
-    </motion.div>
+{/* Contact */}
+<motion.div variants={formVariants} whileHover={{ scale: 1.01 }}>
+  <Label className="flex items-center gap-2 font-medium text-gray-700">
+    <Phone size={18} className="text-red-600 fill-red-700" /> Contact Number
+  </Label>
+  <Input
+    type="tel"
+    name="contact"
+    value={formData.contact}
+    onChange={handleChange}
+    required
+    pattern="^[6-9]\d{9}$" // Indian mobile number
+    onInvalid={(e) => e.target.setCustomValidity("Enter a valid 10-digit mobile number starting with 6-9")}
+    onInput={(e) => e.target.setCustomValidity("")} // reset on typing
+    className="w-full truncate bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:border-red-600 focus:ring-1"
+  />
+</motion.div>
 
-    {/* Email */}
-    <motion.div variants={formVariants} whileHover={{ scale: 1.01 }}>
-      <Label className="flex items-center gap-2 font-medium text-gray-700">
-        <Mail size={18} className="text-red-600 " /> Email
-      </Label>
-      <Input
-        type="email"
-        name="email"
-        value={formData.email}
-        onChange={handleChange}
-        required
-        className="w-full  truncate bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:border-red-600 focus:ring-1"
-      />
-    </motion.div>
+{/* Email */}
+<motion.div variants={formVariants} whileHover={{ scale: 1.01 }}>
+  <Label className="flex items-center gap-2 font-medium text-gray-700">
+    <Mail size={18} className="text-red-600 " /> Email
+  </Label>
+  <Input
+    type="email"
+    name="email"
+    value={formData.email}
+    onChange={handleChange}
+    required
+    pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$"
+    onInvalid={(e) => e.target.setCustomValidity("Enter a valid email address")}
+    onInput={(e) => e.target.setCustomValidity("")}
+    className="w-full truncate bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:border-red-600 focus:ring-1"
+  />
+</motion.div>
+
 
   
   </div>
@@ -561,42 +577,93 @@ return (
     }
   >
     <SelectTrigger
-      className="w-full truncate break-words bg-gray-600 !text-black border border-gray-300 rounded-lg shadow-sm 
+      className="w-full max-w-[350px] truncate min-w-0 
+                 bg-gray-600 !text-black border border-gray-300 rounded-lg shadow-sm 
                  focus:ring-2 focus:ring-gray-400 focus:border-gray-400 
                  data-[state=open]:!bg-gray-200 data-[placeholder]:!text-black !bg-gray-100"
     >
-      <SelectValue placeholder="Select branch" className="!text-black" />
+      <SelectValue 
+        placeholder="Select branch" 
+        className="truncate text-ellipsis overflow-hidden !text-black"
+      />
     </SelectTrigger>
 
-    <SelectContent className="bg-white truncate !text-black max-h-60 overflow-y-auto">
-      <SelectItem value="Artificial Intelligence & Data Science" className="break-words whitespace-normal">Artificial Intelligence & Data Science</SelectItem>
-      <SelectItem value="Artificial Intelligence & Machine Learning Engineering" className="break-words whitespace-normal">Artificial Intelligence & Machine Learning Engineering</SelectItem>
-      <SelectItem value="Biotechnology Engineering" className="break-words whitespace-normal">Biotechnology Engineering</SelectItem>
-      <SelectItem value="Civil Engineering" className="break-words whitespace-normal">Civil Engineering</SelectItem>
-      <SelectItem value="Computer & Communication Engineering"className="break-words whitespace-normal">Computer & Communication Engineering</SelectItem>
-      <SelectItem value="Computer Science & Engineering" className="break-words whitespace-normal">Computer Science & Engineering</SelectItem>
-      <SelectItem value="Computer Science & Engineering (Cyber Security)" className="break-words whitespace-normal">Computer Science & Engineering (Cyber Security)</SelectItem>
-      <SelectItem value="Cyber Security">Cyber Security</SelectItem>
-      <SelectItem value="Electrical & Electronics Engineering"className="break-words whitespace-normal">Electrical & Electronics Engineering</SelectItem>
-      <SelectItem value="Electric Vehicle Technology" className="break-words whitespace-normal">Electric Vehicle Technology</SelectItem>
-      <SelectItem value="Electronics & Communication Engineering" className="break-words whitespace-normal">Electronics & Communication Engineering</SelectItem>
-      <SelectItem value="Electronics Engineering (VLSI Design & Technology)" className="break-words whitespace-normal">Electronics Engineering (VLSI Design & Technology)</SelectItem>
-      <SelectItem value="Electronics & Communication (Advanced Communication Technology)" className="break-words whitespace-normal">Electronics & Communication (Advanced Communication Technology)</SelectItem>
-      <SelectItem value="Information Science & Engineering">Information Science & Engineering</SelectItem>
-      <SelectItem value="Mechanical Engineering">Mechanical Engineering</SelectItem>
-      <SelectItem value="Robotics & Artificial Intelligence Engineering">Robotics & Artificial Intelligence Engineering</SelectItem>
-      <SelectItem value="Construction Technology">Construction Technology</SelectItem>
-      <SelectItem value="Structural Engineering">Structural Engineering</SelectItem>
-      <SelectItem value="Mechatronics">Mechatronics</SelectItem>
-      <SelectItem value="VLSI Design and Embedded Systems">VLSI Design and Embedded Systems</SelectItem>
-      <SelectItem value="MBA">Master of Business Administration</SelectItem>
-      <SelectItem value="BCA">Bachelor of Computer Applications</SelectItem>
-      <SelectItem value="MCA">Master of Computer Applications</SelectItem>
-      <SelectItem value="Master of Technologies">Master of Technologies</SelectItem>
+    <SelectContent className="bg-white !text-black max-h-60 overflow-y-auto max-w-[350px]">
+      <SelectItem value="Artificial Intelligence & Data Science" className="truncate whitespace-normal">
+        Artificial Intelligence & Data Science
+      </SelectItem>
+      <SelectItem value="Artificial Intelligence & Machine Learning Engineering" className="truncate whitespace-normal">
+        Artificial Intelligence & Machine Learning Engineering
+      </SelectItem>
+      <SelectItem value="Biotechnology Engineering" className="truncate whitespace-normal">
+        Biotechnology Engineering
+      </SelectItem>
+      <SelectItem value="Civil Engineering" className="truncate whitespace-normal">
+        Civil Engineering
+      </SelectItem>
+      <SelectItem value="Computer & Communication Engineering" className="truncate whitespace-normal">
+        Computer & Communication Engineering
+      </SelectItem>
+      <SelectItem value="Computer Science & Engineering" className="truncate whitespace-normal">
+        Computer Science & Engineering
+      </SelectItem>
+      <SelectItem value="Computer Science & Engineering (Cyber Security)" className="truncate whitespace-normal">
+        Computer Science & Engineering (Cyber Security)
+      </SelectItem>
+      <SelectItem value="Cyber Security" className="truncate">
+        Cyber Security
+      </SelectItem>
+      <SelectItem value="Electrical & Electronics Engineering" className="truncate whitespace-normal">
+        Electrical & Electronics Engineering
+      </SelectItem>
+      <SelectItem value="Electric Vehicle Technology" className="truncate whitespace-normal">
+        Electric Vehicle Technology
+      </SelectItem>
+      <SelectItem value="Electronics & Communication Engineering" className="truncate whitespace-normal">
+        Electronics & Communication Engineering
+      </SelectItem>
+      <SelectItem value="Electronics Engineering (VLSI Design & Technology)" className="truncate whitespace-normal">
+        Electronics Engineering (VLSI Design & Technology)
+      </SelectItem>
+      <SelectItem value="Electronics & Communication (Advanced Communication Technology)" className="truncate whitespace-normal">
+        Electronics & Communication (Advanced Communication Technology)
+      </SelectItem>
+      <SelectItem value="Information Science & Engineering" className="truncate whitespace-normal">
+        Information Science & Engineering
+      </SelectItem>
+      <SelectItem value="Mechanical Engineering" className="truncate whitespace-normal">
+        Mechanical Engineering
+      </SelectItem>
+      <SelectItem value="Robotics & Artificial Intelligence Engineering" className="truncate whitespace-normal">
+        Robotics & Artificial Intelligence Engineering
+      </SelectItem>
+      <SelectItem value="Construction Technology" className="truncate whitespace-normal">
+        Construction Technology
+      </SelectItem>
+      <SelectItem value="Structural Engineering" className="truncate whitespace-normal">
+        Structural Engineering
+      </SelectItem>
+      <SelectItem value="Mechatronics" className="truncate">
+        Mechatronics
+      </SelectItem>
+      <SelectItem value="VLSI Design and Embedded Systems" className="truncate whitespace-normal">
+        VLSI Design and Embedded Systems
+      </SelectItem>
+      <SelectItem value="MBA" className="truncate">
+        Master of Business Administration
+      </SelectItem>
+      <SelectItem value="BCA" className="truncate">
+        Bachelor of Computer Applications
+      </SelectItem>
+      <SelectItem value="MCA" className="truncate">
+        Master of Computer Applications
+      </SelectItem>
+      <SelectItem value="Master of Technologies" className="truncate">
+        Master of Technologies
+      </SelectItem>
     </SelectContent>
   </Select>
 </motion.div>
-
 
 
     {/* College */}
@@ -614,7 +681,7 @@ return (
       />
     </motion.div>
 
- {/* Mode */}
+{/* Mode */}
 <motion.div variants={formVariants} whileHover={{ scale: 1.01 }}>
   <Label className="flex items-center gap-2 font-medium !text-black">
     <Monitor size={18} className="text-red-600 fill-red-700" /> Mode
@@ -631,22 +698,27 @@ return (
     }}
   >
     <SelectTrigger
-      className="w-full truncate bg-gray-600 !text-black border border-gray-300 rounded-lg shadow-sm 
+      className="w-full max-w-[250px] truncate min-w-0
+                 bg-gray-600 !text-black border border-gray-300 rounded-lg shadow-sm 
                  focus:ring-2 focus:ring-gray-400 focus:border-gray-400 
-                 data-[state=open]:!bg-gray-200 dat !bg-gray-100"
+                 data-[state=open]:!bg-gray-200 data-[placeholder]:!text-black !bg-gray-100"
     >
-      <SelectValue placeholder="Select mode" className="!text-black" />
+      <SelectValue 
+        placeholder="Select mode" 
+        className="truncate text-ellipsis overflow-hidden !text-black" 
+      />
     </SelectTrigger>
 
-    <SelectContent className="bg-white !text-black">
-      <SelectItem value="Online">Online</SelectItem>
-      <SelectItem value="Offline - Bangalore">Offline - Bangalore</SelectItem>
-      <SelectItem value="Offline - Ujire">Offline - Ujire</SelectItem>
-      <SelectItem value="Offline - Nitte">Offline - Nitte</SelectItem>
-      <SelectItem value="Offline - Belagavi">Offline - Belagavi</SelectItem>
+    <SelectContent className="bg-white !text-black max-w-[250px]">
+      <SelectItem value="Online" className="truncate">Online</SelectItem>
+      <SelectItem value="Offline - Bangalore" className="truncate">Offline - Bangalore</SelectItem>
+      <SelectItem value="Offline - Ujire" className="truncate">Offline - Ujire</SelectItem>
+      <SelectItem value="Offline - Nitte" className="truncate">Offline - Nitte</SelectItem>
+      <SelectItem value="Offline - Belagavi" className="truncate">Offline - Belagavi</SelectItem>
     </SelectContent>
   </Select>
 </motion.div>
+
 
 
 

@@ -68,7 +68,7 @@ const Section2 = () => {
             whileInView={{ scale: 1, opacity: 1 }}
             transition={{ delay: 0.6, duration: 0.6 }}
           >
-            <Button onClick={() => navigate("/services")}>
+            <Button onClick={() => navigate("/service")}>
   Learn More
 </Button>
 

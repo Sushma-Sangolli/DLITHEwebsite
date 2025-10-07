@@ -17,8 +17,8 @@ export default function Navbar() {
   const location = useLocation();
 
   return (
-    <nav className="fixed top-0 left-0 right-0 w-full bg-black shadow-sm shadow-yellow-400 z-50 h-16 overflow-hidden">
-      <div className="max-w-[1280px] mx-auto flex justify-between items-center px-4">
+    <nav className="w-full bg-black shadow-sm shadow-yellow-400 z-50 h-16">
+      <div className="max-w-[1280px] mx-auto flex justify-between items-center px-4 h-full">
         {/* Logo */}
         <Link to="/" className="flex items-center flex-shrink-0">
           <img
@@ -39,7 +39,6 @@ export default function Navbar() {
               }`}
             >
               {item.name}
-              {/* underline animation */}
               <span
                 className={`absolute left-0 -bottom-1 h-0.5 bg-yellow-400 transition-all duration-300 ${
                   location.pathname === item.href

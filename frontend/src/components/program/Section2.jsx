@@ -23,13 +23,12 @@ function Section2() {
           <p><strong>Digital Branding:</strong> Your presence in digital world will increase significantly using platforms like Git, LinkedIn, Stackoverflow etc.</p>
         </div>
       ),
-      video: (
-        <iframe
-          className="w-full h-72 md:h-96 rounded-lg shadow-lg"
-          src="https://www.youtube.com/embed/video-id"
-          title="What to Expect as an Intern"
-          allowFullScreen
-        ></iframe>
+      image: (
+        <img
+          src="/program/what.jpg"
+          alt="What Is It In For Me"
+          className="w-full h-72 md:h-96 rounded-lg shadow-lg object-cover"
+        />
       ),
     },
 
@@ -42,18 +41,18 @@ function Section2() {
           </p>
           <button
             onClick={() => navigate("internshipcards")}
-            >
+           
+          >
             Apply Now
           </button>
         </div>
       ),
-      video: (
-        <iframe
-          className="w-full h-72 md:h-96 rounded-lg shadow-lg"
-          src="https://www.youtube.com/embed/video-id"
-          title="Internship Insights"
-          allowFullScreen
-        ></iframe>
+      image: (
+        <img
+          src="/program/internship.jpg"
+          alt="Internship"
+          className="w-full h-72 md:h-96 rounded-lg shadow-lg object-cover"
+        />
       ),
     },
 
@@ -62,22 +61,22 @@ function Section2() {
       text: (
         <div className="space-y-4 text-gray-200 text-justify">
           <p>
-            Our employability boot camp provides a transformative experience that goes beyond traditional job-seeking skills. We equip students with a holistic skillset, including not only resume writing and interview preparation but also essential soft skills like communication, teamwork, problem-solving, and critical thinking. Our intensive, fast-paced program is designed to quickly prepare students for the demands of the modern workplace. We offer personalized coaching, access to a vast network of industry professionals, and guaranteed job interview opportunities. By participating in our boot camp, students gain the confidence and practical skills needed to successfully navigate the job market and launch fulfilling careers. The bootcamp is specific to our client needs. You will undergo rigorous campus to corporate or lateral transformation as per the business needs
+            Our employability boot camp provides a transformative experience that goes beyond traditional job-seeking skills. We equip students with a holistic skillset, including not only resume writing and interview preparation but also essential soft skills like communication, teamwork, problem-solving, and critical thinking. Our intensive, fast-paced program is designed to quickly prepare students for the demands of the modern workplace. We offer personalized coaching, access to a vast network of industry professionals, and guaranteed job interview opportunities. By participating in our boot camp, students gain the confidence and practical skills needed to successfully navigate the job market and launch fulfilling careers. The bootcamp is specific to our client needs. You will undergo rigorous campus to corporate or lateral transformation as per the business needs.
           </p>
           <button
             onClick={() => navigate("bootcampcards")}
-            >
+            
+          >
             Register Now
           </button>
         </div>
       ),
-      video: (
-        <iframe
-          className="w-full h-72 md:h-96 rounded-lg shadow-lg"
-          src="https://www.youtube.com/embed/video-id"
-          title="Bootcamp Overview"
-          allowFullScreen
-        ></iframe>
+      image: (
+        <img
+          src="/program/bootcamp.jpg"
+          alt="Bootcamp"
+          className="w-full h-72 md:h-96 rounded-lg shadow-lg object-cover"
+        />
       ),
     },
 
@@ -90,65 +89,61 @@ function Section2() {
           </p>
           <button
             onClick={() => navigate("certificationcards")}
-             >
+            
+          >
             Get Certified
           </button>
         </div>
       ),
-      video: (
-        <iframe
-          className="w-full h-72 md:h-96 rounded-lg shadow-lg"
-          src="https://www.youtube.com/embed/video-id"
-          title="Certification Benefits"
-          allowFullScreen
-        ></iframe>
+      image: (
+        <img
+          src="/program/certification.png"
+          alt="Certification"
+          className="w-full h-72 md:h-96 rounded-lg shadow-lg object-cover"
+        />
       ),
     },
   };
 
   return (
     <div id="Section2">
-    <div className="w-full px-6 md:px-12 py-10 bg-black rounded-2xl shadow-xl">
-      {/* Tabs Header */}
-      <div className="flex justify-between w-full">
-        {Object.keys(items).map((tabKey) => (
-          <div key={tabKey} className="flex flex-col items-center w-full">
-            <p
-              onClick={() => setActiveTab(tabKey)}
-              className={`relative py-3 px-6 font-semibold transition whitespace-nowrap cursor-pointer rounded-lg
-                ${
-                  activeTab === tabKey
-                    ? "text-white border border-gray-400 "
-                    : "text-gray-300 hover:text-white hover:border hover:border-gray-400 "
-                }`}
-            >
-              {items[tabKey].title}
-            </p>
+      <div className="w-full px-6 md:px-12 py-10 bg-black rounded-2xl shadow-xl">
+        {/* Tabs Header */}
+        <div className="flex justify-between w-full flex-wrap">
+          {Object.keys(items).map((tabKey) => (
+            <div key={tabKey} className="flex flex-col items-center w-full sm:w-auto">
+              <p
+                onClick={() => setActiveTab(tabKey)}
+                className={`relative py-3 px-6 font-semibold transition whitespace-nowrap cursor-pointer rounded-lg
+                  ${
+                    activeTab === tabKey
+                      ? "text-white border border-gray-400"
+                      : "text-gray-300 hover:text-white hover:border hover:border-gray-400"
+                  }`}
+              >
+                {items[tabKey].title}
+              </p>
 
-            {/* Divider Glow AFTER the title */}
-            <div className="h-1 w-full bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600 rounded-full animate-pulse" />
-          </div>
-        ))}
+              <div className="h-1 w-full bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600 rounded-full animate-pulse" />
+            </div>
+          ))}
+        </div>
+
+        {/* Active Tab Content */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeTab}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.4 }}
+            className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start mt-6"
+          >
+            <div>{items[activeTab].text}</div>
+            <div className="flex justify-center">{items[activeTab].image}</div>
+          </motion.div>
+        </AnimatePresence>
       </div>
-
-      {/* Active Tab Content */}
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={activeTab}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -10 }}
-          transition={{ duration: 0.4 }}
-          className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start mt-6"
-        >
-          {/* Left Side Content */}
-          <div>{items[activeTab].text}</div>
-
-          {/* Right Side Video */}
-          <div className="flex justify-center">{items[activeTab].video}</div>
-        </motion.div>
-      </AnimatePresence>
-    </div>
     </div>
   );
 }

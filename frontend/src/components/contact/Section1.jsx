@@ -4,6 +4,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { motion } from "framer-motion";
 import LaptopImg from "@/assets/contact/laptop.avif";
+const API_BASE = "http://localhost:5000/api";
 
 const Section1 = ({ disableWave, nameInputRef, hideImage }) => {
   const [formData, setFormData] = useState({

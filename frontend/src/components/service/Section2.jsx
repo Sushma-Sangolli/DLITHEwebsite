@@ -64,7 +64,7 @@ const Section2 = () => {
             viewport={{ once: true }}
           >
             <Button
-              onClick={() => navigate("/contactus")}
+              onClick={() => navigate("/contact")}
               className="mt-8 bg-[#ff9c00] hover:bg-[#ff7a00] text-white rounded-full px-10 py-4 tracking-wider font-semibold uppercase shadow-lg hover:shadow-[0_0_25px_rgba(255,156,0,0.6)] transition-all duration-300"
             >
               Get Started
